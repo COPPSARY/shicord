@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shicord</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2212%22 fill=%22%235865f2%22/><text x=%2232%22 y=%2242%22 text-anchor=%22middle%22 font-size=%2228%22 font-weight=%22bold%22 fill=%22white%22>S</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <div id="sidebar">
+      <div id="server-header">
+        <h2>Shicord</h2>
+        <button id="invite-btn" title="Create Invite Link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+        </button>
+      </div>
+      <div id="channel-list">
+        <div id="channel-header">
+          <span>Channels</span>
+          <button id="create-channel-btn" title="Create Channel" style="background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0;font-size:18px;line-height:1;">+</button>
+        </div>
+        <div id="channels"></div>
+        <div id="voice-header"><span>Voice</span></div>
+        <div id="voice-channels">
+          <div class="channel-item voice-channel" data-channel="general">
+            <span class="voice-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </span>
+            <span>General Voice</span>
+          </div>
+        </div>
+      </div>
+      <div id="user-section">
+        <div id="user-info">
+          <div id="user-avatar" title="Click to upload avatar"></div>
+          <span id="username-display"></span>
+        </div>
+        <button id="settings-btn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="channel-bar">
+        <span id="channel-name"># general</span>
+        <span id="channel-topic"></span>
+        <div id="online-count"></div>
+      </div>
+
+      <div id="messages-container">
+        <div id="messages"></div>
+        <div id="typing-indicator"></div>
+      </div>
+
+      <div id="reply-bar" class="hidden">
+        <span id="reply-text"></span>
+        <button id="reply-close-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="edit-indicator" class="hidden" style="padding:4px 16px;font-size:12px;color:var(--accent);background:var(--bg-accent);border-top:1px solid var(--border);">
+        Editing message — press Enter to save, Esc to cancel
+      </div>
+
+      <div id="message-input-area">
+        <div id="message-toolbar">
+          <div id="toolbar-icons">
+            <button id="emoji-btn" class="toolbar-btn" title="Emoji">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </button>
+            <button id="sticker-btn" class="toolbar-btn" title="Stickers">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12H4"/><path d="M12 4v16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            </button>
+            <button id="image-btn" class="toolbar-btn" title="Image">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </button>
+            <button id="voice-msg-btn" class="toolbar-btn" title="Voice message">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <div id="recording-timer" class="hidden">0:00</div>
+            <button id="file-btn" class="toolbar-btn" title="Upload File">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </button>
+            <button id="search-btn" class="toolbar-btn" title="Search">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+            <input type="text" id="search-input" placeholder="Search messages..." style="display:none;flex:1;max-width:200px;">
+            <button id="gamble-btn" class="toolbar-btn" title="Gamble">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </button>
+          </div>
+          <div id="message-form">
+            <textarea id="message-input" placeholder="Message #general" maxlength="2000" rows="1"></textarea>
+            <button id="send-btn">Send</button>
+          </div>
+        </div>
+        <div id="mention-dropdown" class="hidden"></div>
+        <div id="emoji-picker" class="hidden"></div>
+        <div id="sticker-picker" class="hidden"></div>
+      </div>
+    </div>
+
+    <div id="members-sidebar">
+      <div id="members-header"><span>Online</span></div>
+      <div id="members-list"></div>
+    </div>
+  </div>
+
+  <div id="username-modal" class="modal">
+    <div class="modal-content">
+      <h2>Welcome to Shicord</h2>
+      <p>Choose your username to join</p>
+      <input type="text" id="modal-username" placeholder="Username" maxlength="32">
+      <button id="modal-join-btn">Join</button>
+    </div>
+  </div>
+
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-content small">
+      <h2>Settings</h2>
+      <label>Username</label>
+      <input type="text" id="settings-username" maxlength="32">
+      <div class="modal-buttons">
+        <button id="settings-save-btn">Save</button>
+        <button id="settings-close-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="invite-modal" class="modal hidden">
+    <div class="modal-content small">
+      <h2>Invite People</h2>
+      <p>Share this link to invite others</p>
+      <div id="invite-link-container">
+        <input type="text" id="invite-link-input" readonly>
+        <button id="invite-copy-btn">Copy</button>
+      </div>
+      <div class="modal-buttons" style="margin-top:12px;">
+        <button id="invite-close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="voice-modal" class="modal hidden">
+    <div class="modal-content" style="width:520px;max-width:95vw;">
+      <h2>Voice Channel</h2>
+      <p id="voice-status">Connecting to voice...</p>
+      <div id="voice-videos" class="hidden">
+        <div id="local-video-container">
+          <video id="local-video" autoplay muted playsinline></video>
+          <span class="video-label">You</span>
+        </div>
+        <div id="remote-videos"></div>
+      </div>
+      <div id="voice-participants"></div>
+      <div id="voice-controls" class="voice-controls hidden">
+        <button id="voice-video-btn" title="Toggle Camera">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </button>
+        <button id="voice-screen-btn" title="Share Screen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </button>
+        <button id="voice-mute-btn" title="Mute Microphone">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <button id="voice-leave-btn" style="background:var(--danger);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-8"/><path d="M18 8l4 4-4 4"/><path d="M2 12h6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gamble-modal" class="modal hidden">
+    <div class="modal-content small">
+      <h2>Gamba</h2>
+      <p>Coin Flip - Double or nothing!</p>
+      <div id="gamble-balance">Balance: 1000</div>
+      <div id="gamble-result" class="hidden"></div>
+      <div id="gamble-bet-area">
+        <label>Bet amount</label>
+        <input type="number" id="gamble-bet" value="10" min="1">
+        <div class="modal-buttons">
+          <button class="gamble-choice" data-choice="heads">Heads</button>
+          <button class="gamble-choice" data-choice="tails">Tails</button>
+        </div>
+      </div>
+      <div class="modal-buttons" style="margin-top:12px;">
+        <button id="gamble-close-btn" style="background:var(--bg-accent);">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="avatar-input" accept="image/*" style="display:none">
+  <input type="file" id="image-input" accept="image/*" style="display:none">
+  <input type="file" id="file-input" style="display:none">
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>
