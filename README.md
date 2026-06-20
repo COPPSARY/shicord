@@ -1,47 +1,70 @@
 # Shicord
 
-Real-time chat app — a lightweight alternative to Discord. Built with Node.js, Express, and Socket.io.
+Guest-only realtime MVP. No auth flow, no multi-server system, no message history guarantees beyond what is persisted, just live chat with optional voice.
 
-## Features
+## Stack
 
-- **Text Chat** — real-time messaging with channels, @mentions, reply, edit, delete
-- **Markdown** — bold, italic, code, strikethrough, code blocks, blockquotes
-- **Emoji & Stickers** — picker with 64 emojis and 74 stickers
-- **File Sharing** — image upload (inline preview), file upload (any type, 10MB limit), voice messages (record up to 60s)
-- **Voice/Video Calls** — WebRTC mesh with mute, video toggle, screen sharing
-- **Gambling** — coin flip and blackjack with server-side balance
-- **Shop** — buy custom name colors and badges with coins
-- **Notifications** — tab title badge, channel unread badges, browser push, sound, mention pings
-- **Channel Management** — create/delete channels
-- **Invite Links** — shareable server invite codes
-- **Search** — filter loaded messages by text
+- `Svelte 5` + `SvelteKit 2`
+- `Ably Realtime` for chat delivery, presence, and WebRTC signaling
+- `Supabase` for message persistence and storage buckets
+- native `WebRTC` for voice audio
+- `Metered` TURN credentials via server endpoint
+- `@lucide/svelte` for icons
+- `@sveltejs/adapter-vercel` for deploys
 
-## Quick Start
+## What It Does
 
-```bash
-cp .env.example .env   # or just use defaults
-npm install
-npm start
+- guest name join
+- live chat in `#general`
+- one voice channel UI path
+- reply and delete own message
+- image upload to Supabase storage
+- guest avatar upload to Supabase storage
+- online presence list
+
+## Environment
+
+Copy `.env.example` to `.env` and fill these in:
+
+```env
+ABLY_API_KEY=
+PUBLIC_SUPABASE_URL=
+PUBLIC_SUPABASE_ANON_KEY=
+METERED_DOMAIN=
+METERED_API_KEY=
 ```
 
-Open `http://localhost:3000`
+The app uses Metered's `turn/credentials?apiKey=...` endpoint, so keep `METERED_API_KEY` in server env and do not expose it to the browser.
 
-## Config
+Optional older TURN envs are still listed in `.env.example`, but the app now prefers the Metered server endpoint.
 
-Edit `.env` (or let it use defaults):
+## Supabase Setup
 
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `3000` | Server port |
-| `MAX_MESSAGE_LENGTH` | `2000` | Max characters per message |
-| `MESSAGE_HISTORY_LIMIT` | `100` | Messages kept per channel |
+1. Run [`supabase-mvp-reset.sql`](./supabase-mvp-reset.sql).
+2. Create storage buckets:
+   - `Avatar`
+   - `Server-images`
+3. Add storage policies so public reads and client uploads work for your MVP.
 
-## Voice Calls
+Without Supabase envs, live Ably chat can still connect, but persisted history and uploads will not work.
 
-WebRTC voice requires HTTPS (or localhost). For deployment behind NAT, add a TURN server in `script.js` under `rtcConfig.iceServers`.
+## Local Dev
 
-## Tech Stack
+```bash
+npm install
+npm run dev
+```
 
-- **Backend** — Node.js, Express, Socket.io
-- **Frontend** — Vanilla JS, WebRTC, MediaRecorder
-- **Storage** — In-memory (no database)
+Dev app runs on `http://localhost:5173`.
+
+## Deploy
+
+This repo already uses the Vercel adapter in `vite.config.ts`. You do not need a custom `vercel.json` for the current app.
+
+Add the same env vars in Vercel project settings:
+
+- `ABLY_API_KEY`
+- `PUBLIC_SUPABASE_URL`
+- `PUBLIC_SUPABASE_ANON_KEY`
+- `METERED_DOMAIN`
+- `METERED_API_KEY`

@@ -1,0 +1,57 @@
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --bg-primary:#0f0e17;
+  --bg-secondary:#1a1932;
+  --bg-tertiary:#0a0a1a;
+  --bg-accent:#2a2945;
+  --text-primary:#fffffe;
+  --text-secondary:#d4d4f0;
+  --text-muted:#9490b8;
+  --accent:#e53170;
+  --accent-hover:#ff4d8a;
+  --green:#2ecc71;
+  --danger:#e74c3c;
+  --warning:#f39c12;
+  --border:#2a2945;
+  --msg-hover:#1e1d3a;
+  --input-bg:#121126;
+  --shadow:rgba(0,0,0,0.4);
+  --voice-green:#2ecc71;
+  --mention-bg:rgba(229,49,112,0.25);
+  --badge:#e53170;
+  --scrollbar-thumb:#3a3960;
+  --server-bar-bg:#0a0a1a;
+  --server-icon-bg:#1a1932;
+}
+
+html,body{height:100%;font-family:'Inter','Segoe UI','Helvetica Neue',Arial,sans-serif;background:var(--bg-primary);color:var(--text-primary);overflow:hidden;}
+
+.hidden{display:none !important;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border-radius:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* Modal base */
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.modal-content{background:var(--bg-secondary);border-radius:12px;padding:32px;width:440px;max-width:90vw;text-align:center;}
+.modal-content.small{width:360px;}
+.modal-content h2{font-size:22px;margin-bottom:4px;}
+.modal-content p{color:var(--text-muted);margin-bottom:16px;font-size:14px;}
+.modal-content input,.modal-content select,.modal-content textarea{width:100%;padding:10px 14px;border-radius:6px;border:1px solid var(--border);background:var(--input-bg);color:var(--text-primary);font-size:14px;outline:none;margin-bottom:12px;font-family:inherit;}
+.modal-content input:focus,.modal-content textarea:focus{border-color:var(--accent);}
+.modal-content button{background:var(--accent);color:white;border:none;border-radius:6px;padding:10px 20px;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.1s;font-family:inherit;}
+.modal-content button:hover{background:var(--accent-hover);}
+.modal-buttons{display:flex;gap:8px;margin-top:8px;}
+.modal-buttons button{flex:1;}
+.modal-buttons button:last-child{background:var(--bg-accent);}
+.modal-buttons button:last-child:hover{background:var(--border);}
+label{display:block;text-align:left;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* Utility */
+button{cursor:pointer;font-family:inherit;}
+input,textarea{font-family:inherit;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
